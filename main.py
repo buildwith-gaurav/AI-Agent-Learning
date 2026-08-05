@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -9,8 +10,18 @@ def home():
 @app.get("/about")
 def about():
     return {
-        {"message: AI Agent Learning"},
-        {"day":2},
-        {"developer":"buildwith-gaurav"}
+         "project": "AI Agent Learning",
+         "day":3,
+         "developer":"buildwith-gaurav"
     }
+
+@app.get("/health")
+def health():
+    return{
+        "status": "running",
+        "server": "fastapi"
+    }
+
+
+
  
