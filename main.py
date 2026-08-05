@@ -22,6 +22,19 @@ def health():
         "server": "fastapi"
     }
 
+@app.get("/login")
+def login():
+    return {"message" : "login sucessfully"}
 
+class loginrequest(BaseModel):
+    email:str
+    password:str
+
+@app.post("/login")
+def login(user:loginrequest):
+    return {
+        "message":"login sucessfully",
+        "email": user.email
+    }
 
  
