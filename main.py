@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , HTTPException
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -7,24 +7,6 @@ app = FastAPI()
 def home():
     return{"message: Hello AI Agent Developer "}
 
-@app.get("/about")
-def about():
-    return {
-         "project": "AI Agent Learning",
-         "day":3,
-         "developer":"buildwith-gaurav"
-    }
-
-@app.get("/health")
-def health():
-    return{
-        "status": "running",
-        "server": "fastapi"
-    }
-
-@app.get("/login")
-def login():
-    return {"message" : "login sucessfully"}
 
 class loginrequest(BaseModel):
     email:str
@@ -32,9 +14,20 @@ class loginrequest(BaseModel):
 
 @app.post("/login")
 def login(user:loginrequest):
+    if user.email != "admin@gmail.com":
+        raise HTTPException(
+            status_code=401,
+            detail="invalid email"
+        )
+
+    if user.password != "123456":
+        raise HTTPException(
+            status_code=401,
+            detail="invalid password"
+        )
+
     return {
-        "message":"login sucessfully",
-        "email": user.email
+        "message":"login sucessfully"
     }
 
  
