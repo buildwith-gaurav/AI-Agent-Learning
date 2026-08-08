@@ -1,33 +1,26 @@
 from fastapi import FastAPI , HTTPException
 from pydantic import BaseModel
 
+from services import ask_gemini
+
 app = FastAPI()
 
-@app.get("/")
-def home():
-    return{"message: Hello AI Agent Developer "}
+# @app.get("/")
+# def home():
+#     return{"message: Hello AI Agent Developer "}
 
 
-class loginrequest(BaseModel):
-    email:str
-    password:str
+class PromptRequest(BaseModel):
+    prompt: str
 
-@app.post("/login")
-def login(user:loginrequest):
-    if user.email != "admin@gmail.com":
-        raise HTTPException(
-            status_code=401,
-            detail="invalid email"
-        )
+@app.post("/chat")
+def chat(user:PromptRequest):
+    answer = ask_gemini(user.prompt)
 
-    if user.password != "123456":
-        raise HTTPException(
-            status_code=401,
-            detail="invalid password"
-        )
+    
 
     return {
-        "message":"login sucessfully"
+        "response":answer
     }
 
  
