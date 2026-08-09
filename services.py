@@ -4,6 +4,7 @@ from google import genai
 from google.genai import types
 
 from config import GEMINI_API_KEY
+
 from tools import add, multiply, get_weather
 
 
