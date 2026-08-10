@@ -221,6 +221,18 @@ def reset_state():
 # -----------------------------
 # Gemini Function
 # -----------------------------
+=======
+chat = client.chats.create(
+    model="gemini-3.6-flash",
+    config={
+        "system_instruction": """
+        You are a helpful AI tutor.
+        Explain technical concepts in simple language.
+        Give examples whenever useful.
+        """
+    }
+)
+>>>>>>> 38aeb68 (Day 9: Added prompt engineering concepts)
 
 def ask_gemini(prompt: str):
     response = chat.send_message(prompt)
