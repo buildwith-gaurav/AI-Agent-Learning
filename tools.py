@@ -5,6 +5,7 @@ def multiply(a:int , b:int) -> int:
 
 def add(a:int , b:int) -> int:
     """add two numbers"""
+
     return a+b
 
 import requests
@@ -76,4 +77,7 @@ def get_weather(city: str) -> str:
     except Exception:
         return "Something went wrong while getting the weather."
 
+
+
+    return a+b
 

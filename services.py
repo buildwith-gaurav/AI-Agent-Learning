@@ -4,6 +4,8 @@ from google import genai
 from google.genai import types
 
 from config import GEMINI_API_KEY
+from tools import multiply,add
+
 
 from tools import add, multiply, get_weather
 
@@ -221,7 +223,6 @@ def reset_state():
 # -----------------------------
 # Gemini Function
 # -----------------------------
-=======
 chat = client.chats.create(
     model="gemini-3.6-flash",
     config={
@@ -232,7 +233,7 @@ chat = client.chats.create(
         """
     }
 )
->>>>>>> 38aeb68 (Day 9: Added prompt engineering concepts)
+
 
 def ask_gemini(prompt: str):
     response = chat.send_message(prompt)
@@ -270,4 +271,20 @@ def execute_task(city=None, task=None, calculation=None):
 
     else:
         return "I don't understand the requested task."
+
+def ask_gemini(prompt: str):
+
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            tools=[multiply,add],
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                disable=False
+            )
+        )
+    )
+
+    print("TOOL HISTORY:", response.automatic_function_calling_history)
+
 
