@@ -5,9 +5,7 @@ from services import ask_gemini
 
 app = FastAPI()
 
-# @app.get("/")
-# def home():
-#     return{"message: Hello AI Agent Developer "}
+
 
 
 class PromptRequest(BaseModel):
