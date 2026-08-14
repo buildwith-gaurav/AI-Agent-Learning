@@ -11,6 +11,7 @@ from services import (
 app = FastAPI()
 
 
+
 class PromptRequest(BaseModel):
     prompt: str
 
