@@ -11,7 +11,7 @@ def add(a: int, b: int) -> int:
 import requests
 
 
-def get_weather(city: str) -> str:
+def get_weather(city: str):
     """Get the current weather for a city."""
 
     try:
