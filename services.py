@@ -4,7 +4,7 @@ from google.genai import types
 from config import GEMINI_API_KEY
 from tools import add , multiply ,get_weather
 
-client = genai.Client(api_key = "GEMINI_API_KEY")
+client = genai.Client(api_key = "REMOVED_SECRET")
 
 chat = client.chats.create(
     model = "gemini-3.6-flash",
