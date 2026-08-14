@@ -4,7 +4,9 @@ from google import genai
 from google.genai import types
 
 from config import GEMINI_API_KEY
-from tools import multiply,add
+from tools import add , multiply
+
+client = genai.Client(api_key = "AGEMINI_API_KEY")
 
 
 from tools import add, multiply, get_weather
@@ -286,5 +288,8 @@ def ask_gemini(prompt: str):
     )
 
     print("TOOL HISTORY:", response.automatic_function_calling_history)
+
+
+
 
 
