@@ -2,14 +2,14 @@ from google import genai
 from google.genai import types
 
 from config import GEMINI_API_KEY
-from tools import add , multiply
+from tools import add , multiply ,get_weather
 
-client = genai.Client(api_key = "AGEMINI_API_KEY")
+client = genai.Client(api_key = "GEMINI_API_KEY")
 
 chat = client.chats.create(
     model = "gemini-3.6-flash",
     config = types.GenerateContentConfig(
-         tools=[add, multiply],
+         tools=[add, multiply,get_weather],
         automatic_function_calling=types.AutomaticFunctionCallingConfig(
             disable=False
         )
