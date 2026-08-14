@@ -2,4 +2,4 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-***REMOVED***
+GEMINI_API_KEY = os.getenv("AGEMINI_API_KEY")
