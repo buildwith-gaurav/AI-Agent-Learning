@@ -1,12 +1,12 @@
-def multiply(a:int , b:int) -> int:
+def multiply(a: int, b: int) -> int:
     """multiply two numbers"""
-    return a*b
+    return a * b
 
 
-def add(a:int , b:int) -> int:
+def add(a: int, b: int) -> int:
     """add two numbers"""
+    return a + b
 
-    return a+b
 
 import requests
 
@@ -66,18 +66,13 @@ def get_weather(city: str) -> str:
         wind_speed = current["wind_speed_10m"]
 
         return {
-    "city": city,
-    "temperature": temperature,
-    "wind_speed": wind_speed
-}
+            "city": city,
+            "temperature": temperature,
+            "wind_speed": wind_speed
+        }
 
     except requests.RequestException:
         return "Weather service is temporarily unavailable. Please try again later."
 
     except Exception:
         return "Something went wrong while getting the weather."
-
-
-
-    return a+b
-

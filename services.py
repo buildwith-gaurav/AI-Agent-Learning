@@ -4,9 +4,9 @@ from google import genai
 from google.genai import types
 
 from config import GEMINI_API_KEY
-from tools import add , multiply
+from tools import add , multiply ,get_weather
 
-client = genai.Client(api_key = "AGEMINI_API_KEY")
+client = genai.Client(api_key = "GEMINI_API_KEY")
 
 
 from tools import add, multiply, get_weather
@@ -226,6 +226,7 @@ def reset_state():
 # Gemini Function
 # -----------------------------
 chat = client.chats.create(
+
     model="gemini-3.6-flash",
     config={
         "system_instruction": """
@@ -280,7 +281,7 @@ def ask_gemini(prompt: str):
         model="gemini-3.6-flash",
         contents=prompt,
         config=types.GenerateContentConfig(
-            tools=[multiply,add],
+            tools=[multiply, add],
             automatic_function_calling=types.AutomaticFunctionCallingConfig(
                 disable=False
             )
@@ -288,6 +289,9 @@ def ask_gemini(prompt: str):
     )
 
     print("TOOL HISTORY:", response.automatic_function_calling_history)
+
+
+
 
 
 
