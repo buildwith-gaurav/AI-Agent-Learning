@@ -64,11 +64,11 @@ def get_weather(city: str) -> str:
         temperature = current["temperature_2m"]
         wind_speed = current["wind_speed_10m"]
 
-        return (
-            f"Weather in {city}: "
-            f"{temperature}°C, "
-            f"wind speed {wind_speed} km/h."
-        )
+        return {
+    "city": city,
+    "temperature": temperature,
+    "wind_speed": wind_speed
+}
 
     except requests.RequestException:
         return "Weather service is temporarily unavailable. Please try again later."
