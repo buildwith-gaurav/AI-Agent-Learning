@@ -25,7 +25,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 
 def extract_city(prompt: str):
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.6-flash",
         contents=f"""
 Extract the city name from this request.
 
@@ -35,7 +35,7 @@ If no city is mentioned, return NONE.
 User request:
 {prompt}
 """
-<<<<<<< HEAD
+
     )
 
     city = response.text.strip()
@@ -47,7 +47,7 @@ User request:
 
 def extract_task(prompt: str):
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.6-flash",
         contents=f"""
 Identify what the user wants to do.
 
@@ -66,7 +66,7 @@ User request:
 
 def extract_calculation(prompt: str):
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.6-flash",
         contents=f"""
 Extract the calculation from the user's request.
 
@@ -182,8 +182,7 @@ def run_agent_workflow(city: str, calculation=None):
     if isinstance(weather, str):
         return weather
 
-# TEMPORARY TEST ONLY
-    agent_state.temperature = 32
+
 
     if calculation is None:
     
@@ -309,7 +308,7 @@ def ask_gemini(prompt: str):
 
 def extract_task(prompt: str):
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.6-flash",
         contents=f"""
 Identify what the user wants to do.
 
@@ -328,7 +327,7 @@ User request:
 
 def extract_calculation(prompt: str):
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.6-flash",
         contents=f"""
 Extract the calculation from the user's request.
 
@@ -421,6 +420,8 @@ def process_weather(city: str):
     )
 
     return weather
+
+print("DEBUG WEATHER:", weather)
 
 def process_calculation(a, b, operation):
     if operation == "multiply":
@@ -526,4 +527,17 @@ def execute_task(city=None, task=None, calculation=None):
     else:
         return "I don't understand the requested task."
 
+def run_prompt(prompt: str):
+    city = extract_city(prompt)
+    task = extract_task(prompt)
 
+    calculation = None
+
+    if task in ["calculation", "weather_and_calculation"]:
+        calculation = extract_calculation(prompt)
+
+    return execute_task(
+        city=city,
+        task=task,
+        calculation=calculation
+    )
