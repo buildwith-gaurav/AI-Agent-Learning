@@ -198,19 +198,19 @@ def should_calculate(calculation=None):
     return True
 
 def run_agent_workflow(city: str, calculation=None):
+
     reset_state()
+
     weather = process_weather(city)
 
     if isinstance(weather, str):
         return weather
 
+    state_check = validate_state()
 
+    if state_check != "State is valid.":
+        return state_check
 
-    if calculation is None:
-    
-        return agent_state
-
-    # Weather condition
     if should_calculate(calculation):
 
         result = process_calculation(
@@ -228,7 +228,7 @@ def run_agent_workflow(city: str, calculation=None):
             final_result=result
         )
 
-    return agent_state
+    return state_to_dict()
 
 
 # -----------------------------
@@ -454,7 +454,21 @@ def process_calculation(a, b, operation):
     )
 
     return result
+
+def finalize_calculation(result):
+    if isinstance(result, str):
+        return result
+
+    final_result = add(result, 10)
+
+    update_state(
+        final_result=final_result
+    )
+
+    return final_result
+
 def run_agent_workflow(city: str, calculation=None):
+
     reset_state()
 
     weather = process_weather(city)
@@ -467,11 +481,7 @@ def run_agent_workflow(city: str, calculation=None):
     if state_check != "State is valid.":
         return state_check
 
-    if calculation is None:
-        return state_to_dict()
-
-    # Weather condition
-    if agent_state.temperature > 30:
+    if should_calculate(calculation):
 
         result = process_calculation(
             calculation["a"],
@@ -482,11 +492,10 @@ def run_agent_workflow(city: str, calculation=None):
         if isinstance(result, str):
             return result
 
-        result = add(result, 10)
+        result = finalize_calculation(result)
 
-        update_state(
-            final_result=result
-        )
+        if isinstance(result, str):
+            return result
 
     return state_to_dict()
 def state_to_dict():
