@@ -221,6 +221,15 @@ def reset_state():
 
     return agent_state
 
+def validate_state():
+    if agent_state.city is None:
+        return "City is missing."
+
+    if agent_state.temperature is None:
+        return "Temperature is missing."
+
+    return "State is valid."
+
 
 # -----------------------------
 # Gemini Function
@@ -440,17 +449,19 @@ def process_calculation(a, b, operation):
     return result
 def run_agent_workflow(city: str, calculation=None):
     reset_state()
+
     weather = process_weather(city)
 
     if isinstance(weather, str):
         return weather
 
-# TEMPORARY TEST ONLY
-    agent_state.temperature = 32
+    state_check = validate_state()
+
+    if state_check != "State is valid.":
+        return state_check
 
     if calculation is None:
-    
-        return agent_state
+        return state_to_dict()
 
     # Weather condition
     if agent_state.temperature > 30:
@@ -470,7 +481,14 @@ def run_agent_workflow(city: str, calculation=None):
             final_result=result
         )
 
-    return agent_state
+    return state_to_dict()
+def state_to_dict():
+    return {
+        "city": agent_state.city,
+        "temperature": agent_state.temperature,
+        "calculation": agent_state.calculation,
+        "final_result": agent_state.final_result
+    }
 
 
 # -----------------------------
