@@ -78,7 +78,8 @@ Allowed operations:
 add
 multiply
 
-Example:
+Examples:
+
 Calculate 15 multiplied by 7
 multiply|15|7
 
@@ -98,13 +99,20 @@ User request:
     if result.upper() == "NONE":
         return None
 
-    operation, a, b = result.split("|")
+    try:
+        operation, a, b = result.split("|")
 
-    return {
-        "operation": operation,
-        "a": int(a),
-        "b": int(b)
-    }
+        if operation not in ["add", "multiply"]:
+            return None
+
+        return {
+            "operation": operation,
+            "a": int(a),
+            "b": int(b)
+        }
+
+    except (ValueError, TypeError):
+        return None
 
 
 # -----------------------------
@@ -338,27 +346,7 @@ def extract_calculation(prompt: str):
     response = client.models.generate_content(
         model="gemini-3.6-flash",
         contents=f"""
-Extract the calculation from the user's request.
 
-Return ONLY in this exact format:
-
-operation|a|b
-
-Allowed operations:
-add
-multiply
-
-Example:
-Calculate 15 multiplied by 7
-multiply|15|7
-
-Calculate 20 plus 10
-add|20|10
-
-If there is no calculation, return:
-NONE
-
-User request:
 {prompt}
 """
     )
@@ -368,14 +356,20 @@ User request:
     if result.upper() == "NONE":
         return None
 
-    operation, a, b = result.split("|")
+    try:
+        operation, a, b = result.split("|")
 
-    return {
-        "operation": operation,
-        "a": int(a),
-        "b": int(b)
-    }
+        if operation not in ["add", "multiply"]:
+            return None
 
+        return {
+            "operation": operation,
+            "a": int(a),
+            "b": int(b)
+        }
+
+    except (ValueError, TypeError):
+        return None
 
 # -----------------------------
 # Agent State
@@ -430,7 +424,6 @@ def process_weather(city: str):
 
     return weather
 
-print("DEBUG WEATHER:", weather)
 
 def process_calculation(a, b, operation):
     if operation == "multiply":
