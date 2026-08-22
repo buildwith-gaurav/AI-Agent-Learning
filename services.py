@@ -183,6 +183,20 @@ def process_calculation(a, b, operation):
     )
 
     return result
+
+
+def should_calculate(calculation=None):
+    if agent_state.temperature is None:
+        return False
+
+    if agent_state.temperature <= 30:
+        return False
+
+    if calculation is None:
+        return False
+
+    return True
+
 def run_agent_workflow(city: str, calculation=None):
     reset_state()
     weather = process_weather(city)
@@ -197,7 +211,7 @@ def run_agent_workflow(city: str, calculation=None):
         return agent_state
 
     # Weather condition
-    if agent_state.temperature > 30:
+    if should_calculate(calculation):
 
         result = process_calculation(
             calculation["a"],

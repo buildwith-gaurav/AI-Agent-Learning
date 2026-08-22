@@ -15,6 +15,7 @@ def get_weather(city: str):
     """Get the current weather for a city."""
 
     try:
+        
         geo_url = "https://geocoding-api.open-meteo.com/v1/search"
 
         geo_params = {
