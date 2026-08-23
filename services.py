@@ -416,10 +416,33 @@ def get_last_memory():
     if not conversation_memory:
         return None
 
-def get_agent_context():
-    return {
+def search_memory(keyword):
+    results = []
+
+    keyword = keyword.lower()
+
+    for memory in conversation_memory:
+        user_text = memory["user"].lower()
+
+        if keyword in user_text:
+            results.append(memory)
+
+    return results
+
+def get_agent_context(memory_keyword=None):
+    context = {
         "current_state": state_to_dict(),
         "recent_memory": get_memory()
+    }
+
+    if memory_keyword:
+        context["memory_search_results"] = search_memory(memory_keyword)
+
+    return context
+def get_relevant_context(keyword):
+    return {
+        "current_state": state_to_dict(),
+        "relevant_memories": search_memory(keyword)
     }
 
     return conversation_memory[-1]
