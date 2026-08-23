@@ -399,6 +399,33 @@ class AgentState:
 
 agent_state = AgentState()
 
+conversation_memory = []
+def save_memory(user_prompt, result):
+
+    conversation_memory.append({
+        "user": user_prompt,
+        "result": result
+    })
+
+    if len(conversation_memory) > 5:
+        conversation_memory.pop(0)
+def get_memory():
+    return conversation_memory
+
+def get_last_memory():
+    if not conversation_memory:
+        return None
+
+def get_agent_context():
+    return {
+        "current_state": state_to_dict(),
+        "recent_memory": get_memory()
+    }
+
+    return conversation_memory[-1]
+def clear_memory():
+    conversation_memory.clear()
+
 
 # -----------------------------
 # Update State
@@ -562,6 +589,7 @@ def execute_task(city=None, task=None, calculation=None):
         return "I don't understand the requested task."
 
 def run_prompt(prompt: str):
+
     city = extract_city(prompt)
     task = extract_task(prompt)
 
@@ -570,8 +598,24 @@ def run_prompt(prompt: str):
     if task in ["calculation", "weather_and_calculation"]:
         calculation = extract_calculation(prompt)
 
-    return execute_task(
+    result = execute_task(
         city=city,
         task=task,
         calculation=calculation
     )
+
+    save_memory(prompt, result)
+
+    return result
+
+def run_task_with_memory(prompt, city=None, task=None, calculation=None):
+
+    result = execute_task(
+        city=city,
+        task=task,
+        calculation=calculation
+    )
+
+    save_memory(prompt, result)
+
+    return result
