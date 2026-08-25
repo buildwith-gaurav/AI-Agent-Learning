@@ -419,7 +419,7 @@ def get_last_memory():
 def search_memory(keyword):
     results = []
 
-    keyword = keyword.lower()
+    keyword = keyword.lower().strip()
 
     for memory in conversation_memory:
         user_text = memory["user"].lower()
@@ -427,7 +427,43 @@ def search_memory(keyword):
         if keyword in user_text:
             results.append(memory)
 
+    if results:
+        return results
+
+    stop_words = {
+        "tell", "me", "more", "about",
+        "what", "is", "the", "a", "an",
+        "in", "on", "for", "to", "of"
+    }
+
+    keywords = [
+        word for word in keyword.split()
+        if word not in stop_words
+    ]
+
+    for memory in conversation_memory:
+        user_text = memory["user"].lower()
+
+        if any(word in user_text for word in keywords):
+            results.append(memory)
+
     return results
+
+def extract_memory_keyword(prompt):
+    words = prompt.lower().split()
+
+    stop_words = {
+        "tell", "me", "more", "about",
+        "what", "is", "the", "a", "an",
+        "in", "on", "for", "to", "of"
+    }
+
+    meaningful_words = [
+        word for word in words
+        if word not in stop_words
+    ]
+
+    return " ".join(meaningful_words)
 
 def get_agent_context(memory_keyword=None):
     context = {
@@ -444,6 +480,47 @@ def get_relevant_context(keyword):
         "current_state": state_to_dict(),
         "relevant_memories": search_memory(keyword)
     }
+
+def build_memory_context(prompt):
+    keyword = extract_memory_keyword(prompt)
+    memories = search_memory(keyword)
+
+    if not memories:
+        return "No relevant previous conversation found."
+
+    context = "Relevant previous conversations:\n"
+
+    for memory in memories:
+        context += (
+            f"User: {memory['user']}\n"
+            f"Result: {memory['result']}\n"
+        )
+
+    return context
+
+    if not memories:
+        return "No relevant previous conversation found."
+
+    context = "Relevant previous conversations:\n"
+
+    for memory in memories:
+        context += (
+            f"User: {memory['user']}\n"
+            f"Result: {memory['result']}\n"
+        )
+
+    return context
+
+def build_prompt_with_memory(prompt):
+    memory_context = build_memory_context(prompt)
+
+    return f"""
+Current user request:
+{prompt}
+
+Previous conversation context:
+{memory_context}
+"""
 
     return conversation_memory[-1]
 def clear_memory():
