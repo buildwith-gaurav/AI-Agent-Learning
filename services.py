@@ -271,18 +271,7 @@ chat = client.chats.create(
 )
 
 
-def ask_gemini(prompt: str):
-    response = chat.send_message(prompt)
-    return response.text
 
-weather = process_weather("Mumbai")
-
-result = process_calculation(20, 5, "multiply")
-result = add(result, 10)
-
-update_state(
-    final_result=result
-)
 
 def execute_task(city=None, task=None, calculation=None):
 
@@ -309,7 +298,6 @@ def execute_task(city=None, task=None, calculation=None):
         return "I don't understand the requested task."
 
 def ask_gemini(prompt: str):
-
     response = client.models.generate_content(
         model="gemini-3.6-flash",
         contents=prompt,
@@ -323,21 +311,7 @@ def ask_gemini(prompt: str):
 
     print("TOOL HISTORY:", response.automatic_function_calling_history)
 
-
-
-
-
-
-
-
-    
-
-    city = response.text.strip()
-
-    if city.upper() == "NONE":
-        return None
-
-    return city
+    return response.text
 
 def extract_task(prompt: str):
     response = client.models.generate_content(
@@ -719,22 +693,7 @@ def reset_state():
     return agent_state
 
 
-# -----------------------------
-# Gemini Function
-# -----------------------------
 
-def ask_gemini(prompt: str):
-    response = chat.send_message(prompt)
-    return response.text
-
-weather = process_weather("Mumbai")
-
-result = process_calculation(20, 5, "multiply")
-result = add(result, 10)
-
-update_state(
-    final_result=result
-)
 
 def execute_task(city=None, task=None, calculation=None):
 
