@@ -759,8 +759,15 @@ def execute_task(city=None, task=None, calculation=None):
 
     else:
         return "I don't understand the requested task."
-
 def run_prompt(prompt: str):
+
+    memory_context = build_memory_context(prompt)
+
+    if memory_context != "No relevant previous conversation found.":
+        return {
+        "response": memory_context,
+        "memory_context": memory_context
+    }
 
     city = extract_city(prompt)
     task = extract_task(prompt)
@@ -778,7 +785,10 @@ def run_prompt(prompt: str):
 
     save_memory(prompt, result)
 
-    return result
+    return {
+        "response": result,
+        "memory_context": memory_context
+    }
 
 def run_task_with_memory(prompt, city=None, task=None, calculation=None):
 
