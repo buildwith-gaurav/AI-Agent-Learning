@@ -9,11 +9,10 @@ app = FastAPI()
 class PromptRequest(BaseModel):
     prompt: str
 
+
 class AgentResponse(BaseModel):
-    city: str | None = None
-    temperature: float | None = None
-    calculation: int | None = None
-    final_result: int | None = None    
+    response: dict | str
+    memory_context: str
 
 
 @app.post("/chat", response_model=AgentResponse)
