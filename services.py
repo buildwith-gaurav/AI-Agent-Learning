@@ -1,4 +1,6 @@
+from database import init_database
 from dataclasses import dataclass
+from database import get_connection
 
 from google import genai
 from google.genai import types
@@ -401,27 +403,91 @@ agent_state = AgentState()
 
 conversation_memory = []
 def save_memory(user_prompt, result):
+    connection = get_connection()
+    cursor = connection.cursor()
 
-    conversation_memory.append({
-        "user": user_prompt,
-        "result": result
-    })
+    cursor.execute(
+        """
+        INSERT INTO memories (user_prompt, result)
+        VALUES (?, ?)
+        """,
+        (user_prompt, str(result))
+    )
 
-    if len(conversation_memory) > 5:
-        conversation_memory.pop(0)
+    connection.commit()
+    connection.close()
 def get_memory():
-    return conversation_memory
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "SELECT user_prompt, result FROM memories ORDER BY id DESC LIMIT 5"
+    )
+
+    rows = cursor.fetchall()
+    connection.close()
+
+    return [
+        {
+            "user": row[0],
+            "result": row[1]
+        }
+        for row in rows
+    ]
 
 def get_last_memory():
-    if not conversation_memory:
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT user_prompt, result
+        FROM memories
+        ORDER BY id DESC
+        LIMIT 1
+        """
+    )
+
+    row = cursor.fetchone()
+    connection.close()
+
+    if row is None:
         return None
+
+    return {
+        "user": row[0],
+        "result": row[1]
+    }
 
 def search_memory(keyword):
     results = []
 
     keyword = keyword.lower().strip()
 
-    for memory in conversation_memory:
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT user_prompt, result
+        FROM memories
+        ORDER BY id DESC
+        LIMIT 5
+        """
+    )
+
+    rows = cursor.fetchall()
+    connection.close()
+
+    memories = [
+        {
+            "user": row[0],
+            "result": row[1]
+        }
+        for row in rows
+    ]
+
+    for memory in memories:
         user_text = memory["user"].lower()
 
         if keyword in user_text:
@@ -441,7 +507,7 @@ def search_memory(keyword):
         if word not in stop_words
     ]
 
-    for memory in conversation_memory:
+    for memory in memories:
         user_text = memory["user"].lower()
 
         if any(word in user_text for word in keywords):
@@ -524,7 +590,13 @@ Previous conversation context:
 
     return conversation_memory[-1]
 def clear_memory():
-    conversation_memory.clear()
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("DELETE FROM memories")
+
+    connection.commit()
+    connection.close()
 
 
 # -----------------------------
