@@ -744,11 +744,14 @@ def run_prompt(prompt: str):
     if task in ["calculation", "weather_and_calculation"]:
         calculation = extract_calculation(prompt)
 
-    result = execute_task(
-        city=city,
-        task=task,
-        calculation=calculation
-    )
+    if task == "unknown":
+        result = ask_gemini(prompt)
+    else:
+        result = execute_task(
+            city=city,
+            task=task,
+            calculation=calculation
+        )
 
     memory_context = build_memory_context(prompt)
 
