@@ -302,6 +302,18 @@ def ask_gemini(prompt: str):
         model="gemini-3.6-flash",
         contents=build_prompt_with_memory(prompt),
         config=types.GenerateContentConfig(
+            system_instruction="""
+You are a helpful AI assistant.
+
+Handle normal conversation naturally.
+
+Use the available tools when the user's request requires:
+- weather information
+- addition
+- multiplication
+
+Do not use a tool for simple greetings or general conversation.
+""",
             tools=[multiply, add , get_weather],
             automatic_function_calling=types.AutomaticFunctionCallingConfig(
                 disable=False
