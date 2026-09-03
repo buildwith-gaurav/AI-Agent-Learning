@@ -302,7 +302,7 @@ def ask_gemini(prompt: str):
         model="gemini-3.6-flash",
         contents=build_prompt_with_memory(prompt),
         config=types.GenerateContentConfig(
-            system_instruction="""
+        system_instruction="""
 You are a helpful AI assistant.
 
 Handle normal conversation naturally.
@@ -313,6 +313,10 @@ Use the available tools when the user's request requires:
 - multiplication
 
 Do not use a tool for simple greetings or general conversation.
+
+If the user asks for something that cannot be handled by the available tools,
+do not invent a result or pretend that you performed the task.
+Clearly explain that the requested capability is not available.
 """,
             tools=[multiply, add , get_weather],
             automatic_function_calling=types.AutomaticFunctionCallingConfig(
