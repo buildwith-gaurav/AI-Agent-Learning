@@ -35,8 +35,8 @@ def get_weather(city: str):
 
         geo_data = geo_response.json()
 
-        if "results" not in geo_data:
-            return f"Could not find the city: {city}"
+        if not geo_data.get("results"):
+         return f"Could not find the city: {city}"
 
         location = geo_data["results"][0]
 
