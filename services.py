@@ -300,7 +300,7 @@ def execute_task(city=None, task=None, calculation=None):
 def ask_gemini(prompt: str):
     response = client.models.generate_content(
         model="gemini-3.6-flash",
-        contents=prompt,
+        contents=build_prompt_with_memory(prompt),
         config=types.GenerateContentConfig(
             tools=[multiply, add , get_weather],
             automatic_function_calling=types.AutomaticFunctionCallingConfig(
