@@ -302,7 +302,7 @@ def ask_gemini(prompt: str):
         model="gemini-3.6-flash",
         contents=prompt,
         config=types.GenerateContentConfig(
-            tools=[multiply, add],
+            tools=[multiply, add , get_weather],
             automatic_function_calling=types.AutomaticFunctionCallingConfig(
                 disable=False
             )
